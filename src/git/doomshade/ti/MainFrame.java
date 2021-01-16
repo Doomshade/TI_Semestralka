@@ -16,7 +16,7 @@ public class MainFrame extends JFrame {
         private final JButton btn = new JButton();
 
         private JButtonBuilder() {
-            btn.setEnabled(false);
+            btn.setEnabled(true);
         }
     }
 

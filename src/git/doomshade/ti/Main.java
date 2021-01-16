@@ -11,6 +11,7 @@ public class Main {
         MainFrame frame = new MainFrame("TI");
 
         frame.init();
+
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

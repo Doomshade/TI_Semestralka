@@ -1,6 +1,25 @@
 package martin;
 
+import java.util.HashMap;
+
 public class FMSController {
+
+    private static final HashMap<FMSStates, FMSState> FMS_STATES = new HashMap<>() {
+        {
+            put(FMSStates.EMPTY, signal -> {
+                // SOME LOGIC
+                return true;
+            });
+            put(FMSStates.PK_ZP, signal -> true);
+            put(FMSStates.PK_ZL, signal -> true);
+            put(FMSStates.PK_ZL_DK_ZL, signal -> true);
+            put(FMSStates.DK_ZL, signal -> true);
+            put(FMSStates.PK_ZP_DK_ZL, signal -> true);
+            put(FMSStates.PK_ZL_DK_ZP, signal -> true);
+            put(FMSStates.DK_ZP, signal -> true);
+            put(FMSStates.PK_ZP_DK_ZP, signal -> true);
+        }
+    };
 
     public FMSStation station = new FMSStation();
 
@@ -12,7 +31,8 @@ public class FMSController {
      */
     public boolean switchState(String signal) {
 
-        switch (station.currentState) {
+        return FMS_STATES.get(station.currentState).getState(signal);
+        /*switch (station.currentState) {
             case EMPTY:
                 return switchEmpty(signal);
             case PK_ZP:
@@ -33,7 +53,7 @@ public class FMSController {
                 return switchPKZPDKZP(signal);
             default:
                 return false;
-        }
+        }*/
     }
 
     private boolean switchEmpty(String signal) {

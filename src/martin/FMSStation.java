@@ -1,6 +1,7 @@
 package martin;
 
 public class FMSStation {
+
     final int VAR_COUNT = 15;
     /**
      * pole pomocných stavových proměnných
@@ -9,27 +10,28 @@ public class FMSStation {
      */
     public boolean[] variables;
 
-    final int STATE_COUNT = 9;
-    public int currentState = 0;
+    /**
+     * Stav ve kterém se automat nachází
+     */
+    public FMSStates currentState = FMSStates.EMPTY;
 
     public FMSStation() {
         initFMSVar();
     }
 
     /* Segmenty */
-    /* ----------- */
 
     /**
      * Obsaď Seg1
      */
-    public void do_s1() {
+    public void doS1() {
         variables[0] = false;
     }
 
     /**
      * Obsaď Seg2
      */
-    public void do_s2() {
+    public void doS2() {
         variables[1] = false;
         variables[12] = true;
         variables[11] = !variables[2];
@@ -38,32 +40,38 @@ public class FMSStation {
     /**
      * Obsaď Seg3
      */
-    public void do_s3() {
+    public void doS3() {
         variables[2] = false;
         variables[11] = true;
         variables[12] = !variables[1];
     }
 
-    /* ----------- */
-
     /* kolej 1 vlak zleva */
-    /* ----------- */
 
-    public void do_v1KL() {
+    /**
+     * Vlak vjede zleva na 1. kolej (2. kolej je prázdná)
+     */
+    public void doV1KL() {
         variables[0] = true;
         variables[10] = false;
         variables[13] = false;
         variables[14] = false;
     }
 
-    public void do_v1KLP() {
+    /**
+     * Vlak vjede zleva na 1. kolej (2. kolej je obsazená)
+     */
+    public void doV1KLP() {
         variables[0] = true;
         variables[10] = true;
         variables[13] = false;
         turnOffSegLights();
     }
 
-    public void do_ch1KL() {
+    /**
+     * Vlak, který přijel zleva na 1. kolej chce odjet
+     */
+    public void doCH1KL() {
         variables[11] = variables[1];
         variables[4] = variables[1] || variables[2];
         variables[5] = false;
@@ -73,7 +81,10 @@ public class FMSStation {
         variables[2] = variables[2] && variables[11];
     }
 
-    public void o1KL() {
+    /**
+     * Vlak odjede doprava z nádraží
+     */
+    public void doO1KL() {
         variables[1] = variables[11];
         variables[2] = variables[2] && variables[11];
         variables[4] = false;
@@ -82,14 +93,12 @@ public class FMSStation {
         turnOnSegLights();
     }
 
-    /* ----------- */
-
-    // Seg1-Seg3 [0-2], S1-S7[3-9], V1-V5[10-14]
-
     /* kolej 2 vlak zleva */
-    /* ----------- */
 
-    public void v2KL() {
+    /**
+     * Vlak vjede na 2. kolej zleva
+     */
+    public void doV2KL() {
         variables[0] = true;
         variables[10] = true;
         variables[13] = true;
@@ -99,7 +108,10 @@ public class FMSStation {
         variables[7] = false;
     }
 
-    public void ch2KL() {
+    /**
+     * Vlak chce odjet z 2. koleje doprava
+     */
+    public void doCH2KL() {
         variables[12] = variables[2];
         variables[5] = variables[1] || variables[2];
         variables[4] = false;
@@ -109,7 +121,10 @@ public class FMSStation {
         variables[1] = variables[1] && variables[12];
     }
 
-    public void o2KL() {
+    /**
+     * Vlak odjede z 2. koleje doprava
+     */
+    public void doO2KL() {
         variables[2] = variables[12];
         variables[1] = variables[1] && variables[12];
         variables[5] = false;
@@ -121,7 +136,10 @@ public class FMSStation {
         variables[14] = true;
     }
 
-    public void o2KLP() {
+    /**
+     * Vlak odjede z 2. koleje doprava a nádraží bude prázdné
+     */
+    public void doO2KLP() {
         variables[2] = variables[12];
         variables[1] = variables[1] && variables[12];
         variables[5] = false;
@@ -131,14 +149,12 @@ public class FMSStation {
         turnOnSegLights();
     }
 
-    /* ----------- */
-
-    // Seg1-Seg3 [0-2], S1-S7[3-9], V1-V5[10-14]
-
     /* kolej 1 vlak doprava */
-    /* ----------- */
 
-    public void do_v1KPS2() {
+    /**
+     * Vlak přijede na 1. kolej zprava ze segmentu 2
+     */
+    public void doV1KPS2() {
         variables[1] = true;
 
         variables[10] = false;
@@ -148,7 +164,10 @@ public class FMSStation {
         variables[11] = true;
     }
 
-    public void do_v1KPS3() {
+    /**
+     * Vlak přijede na 1. kolej zprava ze segmentu 3
+     */
+    public void doV1KPS3() {
         variables[2] = true;
 
         variables[10] = false;
@@ -158,7 +177,10 @@ public class FMSStation {
         variables[11] = false;
     }
 
-    public void do_v1KPS2P() {
+    /**
+     * Vlak přijede na 1. kolej zprava ze segmentu 2 a nádraží je plné
+     */
+    public void doV1KPS2P() {
         variables[1] = true;
 
         variables[10] = false;
@@ -169,7 +191,10 @@ public class FMSStation {
         turnOffSegLights();
     }
 
-    public void do_v1KPS3P() {
+    /**
+     * Vlak přijede na 1. kolej zprava ze segmentu 3 a nádraží je plné
+     */
+    public void doV1KPS3P() {
         variables[2] = true;
 
         variables[10] = false;
@@ -180,7 +205,10 @@ public class FMSStation {
         turnOffSegLights();
     }
 
-    public void do_ch1KP() {
+    /**
+     * Vlak, který přijel na 1.kolej zprava chce odjet z nádraží
+     */
+    public void doCH1KP() {
         variables[10] = variables[0];
         variables[8] = variables[0];
         variables[0] = false;
@@ -188,7 +216,10 @@ public class FMSStation {
         variables[3] = false;
     }
 
-    public void do_o1KP() {
+    /**
+     * Vlak odjel z 1. koleje doleva
+     */
+    public void doO1KP() {
         variables[0] = true;
         variables[8] = false;
         variables[10] = true;
@@ -197,14 +228,12 @@ public class FMSStation {
         turnOnSegLights();
     }
 
-    /* ----------- */
-
-    // Seg1-Seg3 [0-2], S1-S7[3-9], V1-V5[10-14]
-
     /* kolej 2 vlak doprava */
-    /* ----------- */
 
-    public void do_v2KPS2() {
+    /**
+     * Vlak přijel na 2. kolej zprava ze segmentu 2
+     */
+    public void doV2KPS2() {
         variables[1] = true;
         variables[13] = true;
         variables[14] = false;
@@ -212,7 +241,10 @@ public class FMSStation {
         turnOffSegLights();
     }
 
-    public void do_v2KPS3() {
+    /**
+     * Vlak přijel na 2. kolej zprava ze segmentu 3
+     */
+    public void doV2KPS3() {
         variables[2] = true;
         variables[13] = true;
         variables[14] = false;
@@ -220,7 +252,10 @@ public class FMSStation {
         turnOffSegLights();
     }
 
-    public void do_ch2KP() {
+    /**
+     * Vlak chce odjet z 2. koleje doleva
+     */
+    public void doCH2KP() {
         variables[10] = !(variables[0]);
         variables[9] = variables[0];
         variables[0] = false;
@@ -228,7 +263,10 @@ public class FMSStation {
         variables[3] = false;
     }
 
-    public void do_o2KP() {
+    /**
+     * Vlak odjel z 2. koleje doleva
+     */
+    public void doO2KP() {
         variables[0] = true;
         variables[9] = false;
         variables[10] = false;
@@ -237,7 +275,10 @@ public class FMSStation {
         turnOnSegLights();
     }
 
-    public void do_o2KPP() {
+    /**
+     * Vlak odjel z 2. koleje doleva a nádraží je prázdné
+     */
+    public void doO2KPP() {
         variables[0] = true;
         variables[8] = true;
         variables[10] = true;
@@ -246,15 +287,20 @@ public class FMSStation {
         turnOnSegLights();
     }
 
-    /* ----------- */
-
     /* pomocné */
+
+    /**
+     * Vypne příjezdová světla
+     */
     private void turnOffSegLights() {
         variables[3] = false;
         variables[6] = false;
         variables[7] = false;
     }
 
+    /**
+     * Zapne příjezdová světla
+     */
     private void turnOnSegLights() {
         variables[3] = true;
         variables[6] = true;

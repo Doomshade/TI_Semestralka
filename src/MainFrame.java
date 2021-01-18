@@ -119,12 +119,12 @@ public class MainFrame extends JPanel {
         frame.pack();
         frame.setVisible(true);
 
-        resetStates();
+        resetStatesAndDraw();
     }
 
     private JButton createButton(String text, FMSSignals signal) {
         final JButton btn = new JButton(text);
-        btn.setEnabled(false);
+        btn.setEnabled(true);
         btn.addActionListener(e -> {
             if (!MainFrame.this.controller.switchState(signal)) {
                 System.out.println("Neplatný signál");
@@ -166,7 +166,7 @@ public class MainFrame extends JPanel {
     21 - O2KPP
     */
 
-    private void resetStates() {
+    private void resetStatesAndDraw() {
 
         // resetneme
         Arrays.fill(USED_IMGS, false);
@@ -174,68 +174,129 @@ public class MainFrame extends JPanel {
         // koleje empty necháme
         USED_IMGS[0] = true;
 
-        // Semafory
-        // S1 S4 S5 defaultně na zelenou
-        S1(true);
-        S2(false);
-        S3(false);
-        S4(true);
-        S5(true);
-        S6(false);
-        S7(false);
+        boolean[] vars = controller.station.variables;
 
-        // Segmenty
-        Seg1(true);
-        Seg2(true);
-        Seg3(true);
+        // Seg1
+        USED_IMGS[15] = !vars[0];
+        USED_IMGS[16] = vars[0];
 
-        // Vyhybky
-        V1(true);
-        V2(true);
-        V3(true);
-        V4(true);
+        // Seg2
+        USED_IMGS[17] = !vars[1];
+        USED_IMGS[18] = vars[1];
 
-        // poslední výhybka je obráceně
-        V5(false);
+        // Seg3
+        USED_IMGS[19] = !vars[2];
+        USED_IMGS[20] = vars[2];
+
+        // S1-7
+        for (int i = 3; i < 10; ++i) {
+            int firstImg = mapSToImg(i);
+            USED_IMGS[firstImg] = !vars[i];
+            USED_IMGS[firstImg + 1] = vars[i];
+        }
+
+        // V1-5
+        for (int i = 10; i < 15; ++i) {
+            int firstImg = mapVToImg(i);
+            USED_IMGS[firstImg] = !vars[i];
+            USED_IMGS[firstImg + 1] = vars[i];
+        }
+
+        int k1_ZP = 31;
+        int k1_ZL = k1_ZP + 1;
+        int k2_ZP = k1_ZL + 1;
+        int k2_ZL = k2_ZP + 1;
+        switch (controller.station.currentState) {
+            case EMPTY:
+                USED_IMGS[k1_ZP] = false;
+                USED_IMGS[k1_ZL] = false;
+                USED_IMGS[k2_ZP] = false;
+                USED_IMGS[k2_ZL] = false;
+                break;
+            case PK_ZL:
+                USED_IMGS[k1_ZP] = false;
+                USED_IMGS[k1_ZL] = true;
+                USED_IMGS[k2_ZP] = false;
+                USED_IMGS[k2_ZL] = false;
+                break;
+            case PK_ZP:
+                USED_IMGS[k1_ZP] = true;
+                USED_IMGS[k1_ZL] = false;
+                USED_IMGS[k2_ZP] = false;
+                USED_IMGS[k2_ZL] = false;
+                break;
+            case PK_ZL_DK_ZL:
+                USED_IMGS[k1_ZP] = false;
+                USED_IMGS[k1_ZL] = true;
+                USED_IMGS[k2_ZP] = false;
+                USED_IMGS[k2_ZL] = true;
+                break;
+            case DK_ZL:
+                USED_IMGS[k1_ZP] = false;
+                USED_IMGS[k1_ZL] = false;
+                USED_IMGS[k2_ZP] = false;
+                USED_IMGS[k2_ZL] = true;
+                break;
+            case PK_ZP_DK_ZL:
+                USED_IMGS[k1_ZP] = true;
+                USED_IMGS[k1_ZL] = false;
+                USED_IMGS[k2_ZP] = false;
+                USED_IMGS[k2_ZL] = true;
+                break;
+            case PK_ZL_DK_ZP:
+                USED_IMGS[k1_ZP] = false;
+                USED_IMGS[k1_ZL] = true;
+                USED_IMGS[k2_ZP] = true;
+                USED_IMGS[k2_ZL] = false;
+                break;
+            case DK_ZP:
+                USED_IMGS[k1_ZP] = false;
+                USED_IMGS[k1_ZL] = false;
+                USED_IMGS[k2_ZP] = true;
+                USED_IMGS[k2_ZL] = false;
+                break;
+            case PK_ZP_DK_ZP:
+                USED_IMGS[k1_ZP] = true;
+                USED_IMGS[k1_ZL] = false;
+                USED_IMGS[k2_ZP] = true;
+                USED_IMGS[k2_ZL] = false;
+                break;
+        }
+    }
+
+    private int mapSToImg(int varindex) {
+
+        varindex -= 3;
+        // 0 = 1
+        // 1 = 3
+        // 2 = 5
+        // 3 = 7
+        return (varindex * 2) + 1;
+    }
+
+    private int mapVToImg(int varindex) {
+        varindex -= 10;
+
+        // 0 = 21
+        // 1 = 23
+        // 2 = 25
+        // 3 = 27
+        return (varindex * 2) + 21;
     }
 
     private void updateButtons() {
         boolean[] vars = controller.station.variables;
 
         // resetneme do defaultního stavu
-        resetStates();
-        FMSStates state = controller.station.currentState;
+        resetStatesAndDraw();
+        /*FMSStates state = controller.station.currentState;
 
-        // seg1 je obsazený
-        if (!vars[0]) {
-            Seg1(false);
-        }
-
-        // seg2 je obsazený
-        if (!vars[1]) {
-            Seg2(false);
-            V2(false);
-            V3(true);
-        }
-
-        // seg3 je obsazený
-        if (!vars[2]) {
-            Seg3(false);
-            V2(true);
-            V3(false);
-        }
-
-        // na první koleji je vlak
-        if (state == PK_ZL || state == PK_ZP) {
-            V1(false);
-            V4(false);
-            V5(true);
-        }
         // na obou kolejích jsou dva vlaky, které jedou doleva
         // -> Seg1 musí být volný
         if (state == PK_ZP_DK_ZP) {
             Seg1(false);
         }
+
 
         // na obou kolejích jsou dva vlaky, které jedou zleva
         // Seg2 nebo Seg3 musí být volný
@@ -245,8 +306,6 @@ public class MainFrame extends JPanel {
             // Seg3 musí být volný
             if (vars[1]) {
                 Seg3(false);
-                V2(false);
-                V3(true);
             }
             // Seg3 je obsazeno
             // Seg2 musí být volný
@@ -274,6 +333,21 @@ public class MainFrame extends JPanel {
                 Seg1(false);
             }
         }
+
+        // seg1 je obsazený
+        if (!vars[0]) {
+            Seg1(false);
+        }
+
+        // seg2 je obsazený
+        if (!vars[1]) {
+            Seg2(false);
+        }
+
+        // seg3 je obsazený
+        if (!vars[2]) {
+            Seg3(false);
+        }*/
     }
 
     private void Seg1(boolean removeVlak) {
@@ -283,7 +357,7 @@ public class MainFrame extends JPanel {
 
         BUTTONS[3].setEnabled(false);
 
-        switch(controller.station.currentState){
+        switch (controller.station.currentState) {
             case PK_ZL:
                 BUTTONS[6].setEnabled(!removeVlak);
                 BUTTONS[7].setEnabled(!removeVlak);
@@ -297,14 +371,6 @@ public class MainFrame extends JPanel {
                 BUTTONS[3].setEnabled(!removeVlak);
                 break;
         }
-
-        // CH1KL
-
-        // 1. segment
-        USED_IMGS[15] = removeVlak;
-        USED_IMGS[16] = !removeVlak;
-
-        // Vlak chce vjet na kolej
     }
 
     private void Seg2(boolean removeVlak) {
@@ -314,11 +380,7 @@ public class MainFrame extends JPanel {
         BUTTONS[11].setEnabled(false);
         BUTTONS[17].setEnabled(false);
 
-        // 4. semafor
-        USED_IMGS[17] = removeVlak;
-        USED_IMGS[18] = !removeVlak;
-
-        switch (controller.station.currentState){
+        switch (controller.station.currentState) {
             case PK_ZL:
             case PK_ZP:
                 BUTTONS[17].setEnabled(!removeVlak);
@@ -335,11 +397,7 @@ public class MainFrame extends JPanel {
         BUTTONS[2].setEnabled(removeVlak);
         BUTTONS[12].setEnabled(false);
 
-        // 5. semafor
-        USED_IMGS[19] = removeVlak;
-        USED_IMGS[20] = !removeVlak;
-
-        switch (controller.station.currentState){
+        switch (controller.station.currentState) {
             case PK_ZL:
                 break;
             case PK_ZP:
@@ -348,65 +406,5 @@ public class MainFrame extends JPanel {
                 BUTTONS[12].setEnabled(!removeVlak);
                 break;
         }
-    }
-
-    private void S1(boolean isGreen) {
-        USED_IMGS[1] = !isGreen;
-        USED_IMGS[2] = isGreen;
-    }
-
-    private void S2(boolean isGreen) {
-        USED_IMGS[3] = !isGreen;
-        USED_IMGS[4] = isGreen;
-    }
-
-    private void S3(boolean isGreen) {
-        USED_IMGS[5] = !isGreen;
-        USED_IMGS[6] = isGreen;
-    }
-
-    private void S4(boolean isGreen) {
-        USED_IMGS[7] = !isGreen;
-        USED_IMGS[8] = isGreen;
-    }
-
-    private void S5(boolean isGreen) {
-        USED_IMGS[9] = !isGreen;
-        USED_IMGS[10] = isGreen;
-    }
-
-    private void S6(boolean isGreen) {
-        USED_IMGS[11] = !isGreen;
-        USED_IMGS[12] = isGreen;
-    }
-
-    private void S7(boolean isGreen) {
-        USED_IMGS[13] = !isGreen;
-        USED_IMGS[14] = isGreen;
-    }
-
-    private void V1(boolean rovne) {
-        USED_IMGS[21] = !rovne;
-        USED_IMGS[22] = rovne;
-    }
-
-    private void V2(boolean rovne) {
-        USED_IMGS[23] = !rovne;
-        USED_IMGS[24] = rovne;
-    }
-
-    private void V3(boolean rovne) {
-        USED_IMGS[25] = !rovne;
-        USED_IMGS[26] = rovne;
-    }
-
-    private void V4(boolean rovne) {
-        USED_IMGS[27] = !rovne;
-        USED_IMGS[28] = rovne;
-    }
-
-    private void V5(boolean rovne) {
-        USED_IMGS[29] = !rovne;
-        USED_IMGS[30] = rovne;
     }
 }

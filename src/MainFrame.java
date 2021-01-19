@@ -300,9 +300,9 @@ public class MainFrame extends JPanel {
     private void updateSegments() {
         boolean[] vars = controller.station.variables;
         // Seg1-3
-        BUTTONS[0].setEnabled(vars[0]);
-        BUTTONS[1].setEnabled(vars[1]);
-        BUTTONS[2].setEnabled(vars[2]);
+        BUTTONS[0].setEnabled(vars[0] && !odjizdi());
+        BUTTONS[1].setEnabled(vars[1] && !odjizdi());
+        BUTTONS[2].setEnabled(vars[2] && !odjizdi());
     }
 
     private void updateButtons() {
@@ -360,8 +360,8 @@ public class MainFrame extends JPanel {
             case PK_ZL_DK_ZL:
 
                 // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
-                BUTTONS[1].setEnabled(!vars[1] && vars[2]);
-                BUTTONS[2].setEnabled(!vars[2] && vars[1]);
+                BUTTONS[1].setEnabled(vars[1] && vars[2]);
+                BUTTONS[2].setEnabled(vars[2] && vars[1]);
                 // CH1KL, pokud je jeden volný segment a zároveň je červená na S2
                 BUTTONS[5].setEnabled((vars[1] || vars[2]) && !vars[4] && !odjizdi());
 
@@ -392,9 +392,9 @@ public class MainFrame extends JPanel {
                 // 15 CH1KP, 8 CH2KL, 16 O1KP, 9 O2KL
 
                 // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
-                BUTTONS[0].setEnabled((vars[1] || vars[2]) && !vars[3]);
-                BUTTONS[1].setEnabled((vars[0] || vars[2]) && !vars[1]);
-                BUTTONS[2].setEnabled((vars[0] || vars[1]) && !vars[2]);
+                BUTTONS[0].setEnabled((vars[1] || vars[2]) && vars[0]);
+                BUTTONS[1].setEnabled(vars[0] || vars[2] && vars[1]);
+                BUTTONS[2].setEnabled(vars[0] || vars[1] && vars[2]);
 
                 // CH1KP - musí být volný seg1
                 BUTTONS[15].setEnabled(vars[0] && !odjizdi());
@@ -412,9 +412,9 @@ public class MainFrame extends JPanel {
                 // 5 CH1KL, 19 CH2KP, 6 O1KL, 20 O2KP
 
                 // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
-                BUTTONS[0].setEnabled((vars[1] || vars[2]) && !vars[3]);
-                BUTTONS[1].setEnabled((vars[0] || vars[2]) && !vars[1]);
-                BUTTONS[2].setEnabled((vars[0] || vars[1]) && !vars[2]);
+                BUTTONS[0].setEnabled((vars[1] || vars[2]) && vars[0]);
+                BUTTONS[1].setEnabled(vars[0] || vars[2] && vars[1]);
+                BUTTONS[2].setEnabled(vars[0] || vars[1] && vars[2]);
 
                 // CH1KL - musí být volný seg2 nebo 3
                 BUTTONS[5].setEnabled((vars[1] || vars[2]) && !odjizdi());

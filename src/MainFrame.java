@@ -70,7 +70,7 @@ public class MainFrame extends JPanel {
             } else {
                 s = NAMES[i];
             }
-            BUTTONS[i] = createButton(FMSSignals.values()[i].toString(), FMSSignals.values()[i]);
+            BUTTONS[i] = createButton(i + ": " + FMSSignals.values()[i].toString(), FMSSignals.values()[i]);
             p.add(BUTTONS[i]);
         }
 
@@ -177,16 +177,16 @@ public class MainFrame extends JPanel {
         boolean[] vars = controller.station.variables;
 
         // Seg1
-        USED_IMGS[15] = !vars[0];
-        USED_IMGS[16] = vars[0];
+        USED_IMGS[15] = vars[0];
+        USED_IMGS[16] = !vars[0];
 
         // Seg2
-        USED_IMGS[17] = !vars[1];
-        USED_IMGS[18] = vars[1];
+        USED_IMGS[17] = vars[1];
+        USED_IMGS[18] = !vars[1];
 
         // Seg3
-        USED_IMGS[19] = !vars[2];
-        USED_IMGS[20] = vars[2];
+        USED_IMGS[19] = vars[2];
+        USED_IMGS[20] = !vars[2];
 
         // S1-7
         for (int i = 3; i < 10; ++i) {
@@ -262,6 +262,12 @@ public class MainFrame extends JPanel {
                 USED_IMGS[k2_ZL] = false;
                 break;
         }
+
+        for (int i = 0; i < BUTTONS.length; ++i) {
+
+            // enable-ne první tři buttony
+            BUTTONS[i].setEnabled(i < 3);
+        }
     }
 
     private int mapSToImg(int varindex) {
@@ -284,11 +290,181 @@ public class MainFrame extends JPanel {
         return (varindex * 2) + 21;
     }
 
+    private boolean odjizdi() {
+        boolean[] vars = controller.station.variables;
+
+        // na jednom ze světel je zelená -> vlak chce odjet
+        return vars[4] || vars[5] || vars[8] || vars[9];
+    }
+
+    private void updateSegments() {
+        boolean[] vars = controller.station.variables;
+        // Seg1-3
+        BUTTONS[0].setEnabled(vars[0]);
+        BUTTONS[1].setEnabled(vars[1]);
+        BUTTONS[2].setEnabled(vars[2]);
+    }
+
     private void updateButtons() {
+        /*
+         * pole pomocných stavových proměnných
+         * pořadí proměnných:
+         * Seg1-Seg3 [0-2], S1-S7[3-9], V1-V5[10-14]
+         */
         boolean[] vars = controller.station.variables;
 
         // resetneme do defaultního stavu
         resetStatesAndDraw();
+
+        // Seg1-3 default
+        updateSegments();
+
+        System.out.println("STATE: " + controller.station.currentState);
+
+        switch (controller.station.currentState) {
+            case EMPTY:
+                // vjezdy na kolej
+                BUTTONS[3].setEnabled(!vars[0]);
+                BUTTONS[11].setEnabled(!vars[1]);
+                BUTTONS[12].setEnabled(!vars[2]);
+                break;
+            case PK_ZL:
+
+                // CH1KL, pokud je jeden volný segment a zároveň je červená
+                BUTTONS[5].setEnabled((vars[1] || vars[2]) && !vars[4] && !odjizdi());
+
+                // V2KPS2-3 - volno
+                BUTTONS[17].setEnabled(!vars[1] && !odjizdi());
+                BUTTONS[18].setEnabled(!vars[2] && !odjizdi());
+
+                // V2KL
+                BUTTONS[7].setEnabled(!vars[0] && !odjizdi());
+
+                // O1KL - musí být zelená
+                BUTTONS[6].setEnabled(vars[4]);
+                break;
+            case PK_ZP:
+                // CH1KP, pokud je volný první segment a zároveň je červená
+                BUTTONS[15].setEnabled(vars[0] && !vars[8] && !odjizdi());
+
+                // V2KPS2-3
+                BUTTONS[17].setEnabled(!vars[1] && !odjizdi());
+                BUTTONS[18].setEnabled(!vars[2] && !odjizdi());
+
+                // V2KL - occupied Seg1
+                BUTTONS[7].setEnabled(!vars[0] && !odjizdi());
+
+                // O1KP - musí být zelená
+                BUTTONS[16].setEnabled(vars[8]);
+                break;
+            case PK_ZL_DK_ZL:
+
+                // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
+                BUTTONS[1].setEnabled(!vars[1] && vars[2]);
+                BUTTONS[2].setEnabled(!vars[2] && vars[1]);
+                // CH1KL, pokud je jeden volný segment a zároveň je červená na S2
+                BUTTONS[5].setEnabled((vars[1] || vars[2]) && !vars[4] && !odjizdi());
+
+                // CH2KL, pokud je jeden volný segment a zároveň je červená na S3
+                BUTTONS[8].setEnabled((vars[1] || vars[2]) && !vars[5] && !odjizdi());
+
+                // O1KL - musí být zelená
+                BUTTONS[6].setEnabled(vars[4]);
+
+                // O2KL - musí být zelená
+                BUTTONS[9].setEnabled(vars[5]);
+                break;
+            case DK_ZL:
+                // CH2KL, pokud je jeden volný segment a zároveň je červená na S3
+                BUTTONS[8].setEnabled((vars[1] || vars[2]) && !vars[5] && !odjizdi());
+
+                // V1KLP - enabled, pokud je ve seg1 vlak
+                BUTTONS[4].setEnabled(!vars[0] && !odjizdi());
+
+                // V1KPS2-3P - vlak je v seg 2-3
+                BUTTONS[13].setEnabled(!vars[1] && !odjizdi());
+                BUTTONS[14].setEnabled(!vars[2] && !odjizdi());
+
+                BUTTONS[10].setEnabled(vars[5]);
+
+                break;
+            case PK_ZP_DK_ZL:
+                // 15 CH1KP, 8 CH2KL, 16 O1KP, 9 O2KL
+
+                // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
+                BUTTONS[0].setEnabled((vars[1] || vars[2]) && !vars[3]);
+                BUTTONS[1].setEnabled((vars[0] || vars[2]) && !vars[1]);
+                BUTTONS[2].setEnabled((vars[0] || vars[1]) && !vars[2]);
+
+                // CH1KP - musí být volný seg1
+                BUTTONS[15].setEnabled(vars[0] && !odjizdi());
+
+                // CH2KL - musí být volný seg2 nebo 3
+                BUTTONS[8].setEnabled((vars[1] || vars[2]) && !odjizdi());
+
+                // O1KP - je tam zelená na S6
+                BUTTONS[16].setEnabled(vars[8]);
+
+                // O2KL - je tam zelená na S3
+                BUTTONS[9].setEnabled(vars[5]);
+                break;
+            case PK_ZL_DK_ZP:
+                // 5 CH1KL, 19 CH2KP, 6 O1KL, 20 O2KP
+
+                // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
+                BUTTONS[0].setEnabled((vars[1] || vars[2]) && !vars[3]);
+                BUTTONS[1].setEnabled((vars[0] || vars[2]) && !vars[1]);
+                BUTTONS[2].setEnabled((vars[0] || vars[1]) && !vars[2]);
+
+                // CH1KL - musí být volný seg2 nebo 3
+                BUTTONS[5].setEnabled((vars[1] || vars[2]) && !odjizdi());
+
+                // CH2KP - musí být volný seg1
+                BUTTONS[19].setEnabled(vars[0] && !odjizdi());
+
+                // O1KL
+                BUTTONS[6].setEnabled(vars[4]);
+
+                // O2KP
+                BUTTONS[20].setEnabled(vars[9]);
+                break;
+            case DK_ZP:
+                // 19 CH2KP, 13 V1KPS2P, 14 V1KPS3P, 21 O2KPP, 4 V1KLP
+
+                // CH2KP - musí být volný seg1
+                BUTTONS[19].setEnabled(vars[0] && !odjizdi());
+
+                // V1KPS2P - musí být vlak v seg2
+                BUTTONS[13].setEnabled(!vars[1] && !odjizdi());
+
+                // V1KPS3P - musí být vlak v seg3
+                BUTTONS[14].setEnabled(!vars[2] && !odjizdi());
+
+                // V1KLP - musí být vlak v seg1
+                BUTTONS[4].setEnabled(!vars[0] && !odjizdi());
+
+                // O2KPP - musí být zelená u S7
+                BUTTONS[21].setEnabled(vars[9]);
+                break;
+            case PK_ZP_DK_ZP:
+                // 15 CH1KP, 19 CH2KP, 16 O1KP, 20 O2KP
+
+                // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
+                BUTTONS[0].setEnabled(false);
+
+                // CH1KP - musí být volný seg1
+                BUTTONS[15].setEnabled(vars[0] && !odjizdi());
+
+                // CH2KP - musí být volný seg1
+                BUTTONS[19].setEnabled(vars[0] && !odjizdi());
+
+                // O1KP - S6 zelená
+                BUTTONS[16].setEnabled(vars[8]);
+
+                // O2KP - S7 zelená
+                BUTTONS[20].setEnabled(vars[9]);
+                break;
+        }
         /*FMSStates state = controller.station.currentState;
 
         // na obou kolejích jsou dva vlaky, které jedou doleva
@@ -332,21 +508,6 @@ public class MainFrame extends JPanel {
             else if (vars[2] && vars[3]) {
                 Seg1(false);
             }
-        }
-
-        // seg1 je obsazený
-        if (!vars[0]) {
-            Seg1(false);
-        }
-
-        // seg2 je obsazený
-        if (!vars[1]) {
-            Seg2(false);
-        }
-
-        // seg3 je obsazený
-        if (!vars[2]) {
-            Seg3(false);
         }*/
     }
 
@@ -355,9 +516,10 @@ public class MainFrame extends JPanel {
         // Seg1 btn
         BUTTONS[0].setEnabled(removeVlak);
 
-        BUTTONS[3].setEnabled(false);
+        //
+        BUTTONS[3].setEnabled(!removeVlak);
 
-        switch (controller.station.currentState) {
+        /*switch (controller.station.currentState) {
             case PK_ZL:
                 BUTTONS[6].setEnabled(!removeVlak);
                 BUTTONS[7].setEnabled(!removeVlak);
@@ -370,7 +532,7 @@ public class MainFrame extends JPanel {
             case EMPTY:
                 BUTTONS[3].setEnabled(!removeVlak);
                 break;
-        }
+        }*/
     }
 
     private void Seg2(boolean removeVlak) {

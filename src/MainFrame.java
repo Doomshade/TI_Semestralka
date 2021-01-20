@@ -1,6 +1,5 @@
 import martin.FMSController;
 import martin.FMSSignals;
-import martin.FMSStates;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
-
-import static martin.FMSStates.*;
 
 public class MainFrame extends JPanel {
 
@@ -476,109 +473,14 @@ public class MainFrame extends JPanel {
 
                 // O2KP - S7 zelená
                 BUTTONS[20].setEnabled(vars[9]);
-                break;
-        }
-        /*FMSStates state = controller.station.currentState;
 
-        // na obou kolejích jsou dva vlaky, které jedou doleva
-        // -> Seg1 musí být volný
-        if (state == PK_ZP_DK_ZP) {
-            Seg1(false);
-        }
+                // 11 12
+                BUTTONS[11].setEnabled(vars[0] && vars[2]);
+                BUTTONS[12].setEnabled(vars[0] && vars[2]);
 
-
-        // na obou kolejích jsou dva vlaky, které jedou zleva
-        // Seg2 nebo Seg3 musí být volný
-        if (state == PK_ZL_DK_ZL) {
-
-            // Seg2 je obsazeno
-            // Seg3 musí být volný
-            if (vars[1]) {
-                Seg3(false);
-            }
-            // Seg3 je obsazeno
-            // Seg2 musí být volný
-            else if (vars[2]) {
-                Seg2(false);
-
-            }
-        }
-
-        // obě koleje jsou obsazené -> musíme nechat jeden výstup
-        if (state == PK_ZL_DK_ZP || state == PK_ZP_DK_ZL) {
-            if (vars[1]) {
-
-                // seg1 a seg2 obsazené -> seg3 musí být volný
-                if (vars[2]) {
-                    Seg3(false);
-                }
-                // seg1 a seg3 obsazené -> seg2 musí být volný
-                else if (vars[3]) {
-                    Seg2(false);
-                }
-            }
-            // seg2 a seg3 jsou obsazené
-            else if (vars[2] && vars[3]) {
-                Seg1(false);
-            }
-        }*/
-    }
-
-    private void Seg1(boolean removeVlak) {
-
-        // Seg1 btn
-        BUTTONS[0].setEnabled(removeVlak);
-
-        //
-        BUTTONS[3].setEnabled(!removeVlak);
-
-        /*switch (controller.station.currentState) {
-            case PK_ZL:
-                BUTTONS[6].setEnabled(!removeVlak);
-                BUTTONS[7].setEnabled(!removeVlak);
-                BUTTONS[17].setEnabled(!removeVlak);
-                BUTTONS[18].setEnabled(!removeVlak);
-                break;
-            case PK_ZP:
-                BUTTONS[0].setEnabled(!removeVlak);
-                break;
-            case EMPTY:
-                BUTTONS[3].setEnabled(!removeVlak);
-                break;
-        }*/
-    }
-
-    private void Seg2(boolean removeVlak) {
-
-        // Seg2 btn
-        BUTTONS[1].setEnabled(removeVlak);
-        BUTTONS[11].setEnabled(false);
-        BUTTONS[17].setEnabled(false);
-
-        switch (controller.station.currentState) {
-            case PK_ZL:
-            case PK_ZP:
-                BUTTONS[17].setEnabled(!removeVlak);
-                break;
-            case EMPTY:
-                BUTTONS[11].setEnabled(!removeVlak);
-                break;
-        }
-    }
-
-    private void Seg3(boolean removeVlak) {
-
-        // Seg3 btn
-        BUTTONS[2].setEnabled(removeVlak);
-        BUTTONS[12].setEnabled(false);
-
-        switch (controller.station.currentState) {
-            case PK_ZL:
-                break;
-            case PK_ZP:
-                break;
-            case EMPTY:
-                BUTTONS[12].setEnabled(!removeVlak);
+                // 17 18
+                BUTTONS[17].setEnabled(vars[0] && vars[1]);
+                BUTTONS[18].setEnabled(vars[0] && vars[1]);
                 break;
         }
     }

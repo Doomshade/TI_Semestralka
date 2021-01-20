@@ -449,21 +449,17 @@ public class MainFrame extends JPanel {
                 // CH2KP - musí být volný seg1
                 BUTTONS[19].setEnabled(!odjizdi());
 
-                // V1KPS2P - musí být vlak v seg2
-                BUTTONS[13].setEnabled(!vars[1] && !odjizdi());
+                // V1KPS2P - musí být vlak v seg2 a seg1 musí být volný
+                BUTTONS[13].setEnabled(vars[0] && !vars[1] && !odjizdi());
 
-                // V1KPS3P - musí být vlak v seg3
-                BUTTONS[14].setEnabled(!vars[2] && !odjizdi());
+                // V1KPS3P - musí být vlak v seg3 a seg1 musí být volný
+                BUTTONS[14].setEnabled(vars[0] && !vars[2] && !odjizdi());
 
                 // V1KLP - musí být vlak v seg1
                 BUTTONS[4].setEnabled(!vars[0] && !odjizdi());
 
                 // O2KPP - musí být zelená u S7
                 BUTTONS[21].setEnabled(vars[9]);
-
-                // 11 V1KPS2 12 V1KPS3
-                BUTTONS[11].setEnabled(vars[0] && !vars[1]);
-                BUTTONS[12].setEnabled(vars[0] && !vars[2]);
                 break;
             case PK_ZP_DK_ZP:
                 // 15 CH1KP, 19 CH2KP, 16 O1KP, 20 O2KP

@@ -103,6 +103,26 @@ public class MainFrame extends JPanel {
             BUTTONS[i].setToolTipText(s);
             p.add(BUTTONS[i]);
         }
+        JButton legenda = new JButton("Legenda");
+
+        legenda.addActionListener(e -> {
+            JFrame lFrame = new JFrame("Legenda");
+            Dimension dim = new Dimension(360, 420);
+            lFrame.setMinimumSize(dim);
+            lFrame.setResizable(false);
+
+            JTextArea ta = new JTextArea();
+            ta.setEditable(false);
+
+            for (int i = 0; i < BUTTONS.length; ++i) {
+                ta.append(FMSSignals.values()[i].toString() +  "\t" + TOOLTIPS[i] + "\n");
+            }
+            lFrame.add(ta);
+            lFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            lFrame.setVisible(true);
+        });
+        p.add(legenda);
+
         JButton reset = new JButton("RESET");
 
         reset.addActionListener(e -> {

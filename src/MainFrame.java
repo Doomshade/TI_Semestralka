@@ -365,6 +365,10 @@ public class MainFrame extends JPanel {
 
                 // O1KP - musí být zelená
                 BUTTONS[16].setEnabled(vars[8]);
+
+                // V2KPS2 17 V2KPS3 18
+                BUTTONS[17].setEnabled(vars[0] && vars[1]);
+                BUTTONS[18].setEnabled(vars[0] && vars[1]);
                 break;
             case PK_ZL_DK_ZL:
 
@@ -455,6 +459,10 @@ public class MainFrame extends JPanel {
 
                 // O2KPP - musí být zelená u S7
                 BUTTONS[21].setEnabled(vars[9]);
+
+                // 11 V1KPS2 12 V1KPS3
+                BUTTONS[11].setEnabled(vars[0] && vars[2]);
+                BUTTONS[12].setEnabled(vars[0] && vars[2]);
                 break;
             case PK_ZP_DK_ZP:
                 // 15 CH1KP, 19 CH2KP, 16 O1KP, 20 O2KP
@@ -473,14 +481,6 @@ public class MainFrame extends JPanel {
 
                 // O2KP - S7 zelená
                 BUTTONS[20].setEnabled(vars[9]);
-
-                // 11 12
-                BUTTONS[11].setEnabled(vars[0] && vars[2]);
-                BUTTONS[12].setEnabled(vars[0] && vars[2]);
-
-                // 17 18
-                BUTTONS[17].setEnabled(vars[0] && vars[1]);
-                BUTTONS[18].setEnabled(vars[0] && vars[1]);
                 break;
         }
     }

@@ -99,7 +99,7 @@ public class MainFrame extends JPanel {
             } else {
                 s = TOOLTIPS[i];
             }
-            BUTTONS[i] = createButton(i + ": " + FMSSignals.values()[i].toString(), FMSSignals.values()[i]);
+            BUTTONS[i] = createButton(FMSSignals.values()[i].toString(), FMSSignals.values()[i]);
             BUTTONS[i].setToolTipText(s);
             p.add(BUTTONS[i]);
         }

@@ -29,8 +29,9 @@ public class MainFrame extends JPanel {
     private final boolean[] USED_IMGS = new boolean[IMAGE_COUNT];
 
     private static final String[] NAMES = {
-            "Seg1", "Seg2", "Seg3",
-            "Vlak L na kolej 1", "V1KLP", "CH1KL", "O1KL"
+            "Vjezd vlaku do segmentu 1", "Vjezd vlaku do segmentu 2", "Vjezd vlaku do segmentu 3",
+            "Vjezd vlaku ze segmentu 1 na 1. kolej", "Vjezd vlaku ze segmentu 1 na 1. kolej",
+            "Vlak zleva na koleji 1 chce odjet"
     };
 
     private FMSController controller;
@@ -367,8 +368,8 @@ public class MainFrame extends JPanel {
                 BUTTONS[16].setEnabled(vars[8]);
 
                 // V2KPS2 17 V2KPS3 18
-                BUTTONS[17].setEnabled(vars[0] && vars[1]);
-                BUTTONS[18].setEnabled(vars[0] && vars[1]);
+                BUTTONS[17].setEnabled(vars[0] && !vars[1]);
+                BUTTONS[18].setEnabled(vars[0] && !vars[2]);
                 break;
             case PK_ZL_DK_ZL:
 
@@ -461,8 +462,8 @@ public class MainFrame extends JPanel {
                 BUTTONS[21].setEnabled(vars[9]);
 
                 // 11 V1KPS2 12 V1KPS3
-                BUTTONS[11].setEnabled(vars[0] && vars[2]);
-                BUTTONS[12].setEnabled(vars[0] && vars[2]);
+                BUTTONS[11].setEnabled(vars[0] && !vars[1]);
+                BUTTONS[12].setEnabled(vars[0] && !vars[2]);
                 break;
             case PK_ZP_DK_ZP:
                 // 15 CH1KP, 19 CH2KP, 16 O1KP, 20 O2KP

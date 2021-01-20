@@ -26,10 +26,10 @@ public class MainFrame extends JPanel {
     V2KPS2, V2KPS3, CH2KP, O2KP, O2KPP
     */
 
-    private static final JButton[] BUTTONS = new JButton[(int) Arrays.stream(FMSSignals.values()).count()];
+    private final JButton[] BUTTONS = new JButton[(int) Arrays.stream(FMSSignals.values()).count()];
 
     private static final BufferedImage[] IMGS = new BufferedImage[IMAGE_COUNT];
-    private static final boolean[] USED_IMGS = new boolean[IMAGE_COUNT];
+    private final boolean[] USED_IMGS = new boolean[IMAGE_COUNT];
 
     private static final String[] NAMES = {
             "Seg1", "Seg2", "Seg3",
@@ -73,6 +73,18 @@ public class MainFrame extends JPanel {
             BUTTONS[i] = createButton(i + ": " + FMSSignals.values()[i].toString(), FMSSignals.values()[i]);
             p.add(BUTTONS[i]);
         }
+        JButton reset = new JButton("RESET");
+
+        reset.addActionListener(e -> {
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.dispose();
+            try {
+                new MainFrame().showScreen();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        p.add(reset);
 
         // seg1-3 necháme enabled
         for (int i = 0; i < 3; ++i) {

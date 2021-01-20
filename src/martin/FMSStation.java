@@ -25,25 +25,25 @@ public class FMSStation {
      * Obsaď Seg1
      */
     public void doS1() {
-        variables[0] = false;
+        variables[0] = false; // Seg1
     }
 
     /**
      * Obsaď Seg2
      */
     public void doS2() {
-        variables[1] = false;
-        variables[12] = true;
-        variables[11] = !variables[2];
+        variables[1] = false; // Seg1
+        variables[12] = true; // V3
+        variables[11] = !variables[2]; // V2
     }
 
     /**
      * Obsaď Seg3
      */
     public void doS3() {
-        variables[2] = false;
-        variables[11] = true;
-        variables[12] = !variables[1];
+        variables[2] = false; // Seg3
+        variables[11] = true; // V2
+        variables[12] = !variables[1]; // V3
     }
 
     /* kolej 1 vlak zleva */
@@ -52,19 +52,20 @@ public class FMSStation {
      * Vlak vjede zleva na 1. kolej (2. kolej je prázdná)
      */
     public void doV1KL() {
-        variables[0] = true;
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = false;
+        variables[0] = true; // Seg1
+        variables[10] = false; // V1
+        variables[13] = false; // V4
+        variables[14] = true; // V5
     }
 
     /**
      * Vlak vjede zleva na 1. kolej (2. kolej je obsazená)
      */
     public void doV1KLP() {
-        variables[0] = true;
-        variables[10] = true;
-        variables[13] = false;
+        variables[0] = true; // Seg1
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
         turnOffSegLights();
     }
 
@@ -72,24 +73,36 @@ public class FMSStation {
      * Vlak, který přijel zleva na 1. kolej chce odjet
      */
     public void doCH1KL() {
-        variables[11] = variables[1];
-        variables[4] = variables[1] || variables[2];
-        variables[5] = false;
-        variables[6] = false;
-        variables[7] = false;
-        variables[1] = false;
-        variables[2] = variables[2] && variables[11];
+        variables[11] = variables[1]; // V2
+
+        variables[12] = variables[2]; // změna V3
+
+        variables[4] = variables[1] || variables[2]; // S2
+        variables[5] = false; // S3
+
+        /*
+        variables[6] = false; // S4
+        variables[7] = false; // S5
+         */
+
+        variables[6] = !variables[4]; // S4
+        variables[7] = !variables[4]; // S5
+
+        variables[1] = false; // Seg2
+        variables[2] = variables[2] && variables[11]; // Seg3
     }
 
     /**
      * Vlak odjede doprava z nádraží
      */
     public void doO1KL() {
-        variables[1] = variables[11];
-        variables[2] = variables[2] && variables[11];
-        variables[4] = false;
-        variables[10] = true;
-        variables[14] = true;
+        variables[1] = variables[11]; // Seg2
+        // variables[2] = variables[2] && variables[11]; // Seg3
+        variables[2] = variables[12];
+        variables[4] = false; // S2
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
         turnOnSegLights();
     }
 
@@ -99,53 +112,62 @@ public class FMSStation {
      * Vlak vjede na 2. kolej zleva
      */
     public void doV2KL() {
-        variables[0] = true;
-        variables[10] = true;
-        variables[13] = true;
-        variables[14] = false;
-        variables[3] = false;
-        variables[6] = false;
-        variables[7] = false;
+        variables[0] = true; // Seg1
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
+        turnOffSegLights();
     }
 
     /**
      * Vlak chce odjet z 2. koleje doprava
      */
     public void doCH2KL() {
-        variables[12] = variables[2];
-        variables[5] = variables[1] || variables[2];
-        variables[4] = false;
-        variables[6] = false;
-        variables[7] = false;
-        variables[2] = false;
-        variables[1] = variables[1] && variables[12];
+        variables[12] = variables[2]; // V3
+
+        variables[11] = variables[1]; // změna V2
+
+        variables[5] = variables[1] || variables[2]; // S3
+        variables[4] = false; // S2
+
+        /*
+        variables[6] = false; // S4 -- ZMĚNA
+        variables[7] = false; // S5
+         */
+
+        variables[6] = !variables[5]; // S4 -- ZMĚNA
+        variables[7] = !variables[5]; // S5
+
+        variables[2] = false; // Seg3
+        variables[1] = variables[1] && variables[12]; // Seg2
     }
 
     /**
      * Vlak odjede z 2. koleje doprava
      */
     public void doO2KL() {
-        variables[2] = variables[12];
-        variables[1] = variables[1] && variables[12];
-        variables[5] = false;
-        variables[3] = true;
-        variables[5] = true;
-        variables[6] = true;
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = true;
+        variables[2] = variables[12]; // Seg3
+        // variables[1] = variables[1] && variables[12]; // Seg2
+        variables[1] = variables[11]; // změna
+        variables[5] = false; // S3
+        variables[3] = true; // S1
+        variables[6] = true; // S4
+        variables[7] = true; // S5
+        variables[10] = false; // V1
+        variables[13] = false; // V4
+        variables[14] = true; // V5
     }
 
     /**
      * Vlak odjede z 2. koleje doprava a nádraží bude prázdné
      */
     public void doO2KLP() {
-        variables[2] = variables[12];
-        variables[1] = variables[1] && variables[12];
-        variables[5] = false;
-        variables[10] = true;
-        variables[13] = true;
-        variables[14] = false;
+        variables[2] = variables[12]; // Seg3
+        variables[1] = variables[11]; // Seg2
+        variables[5] = false; // S3
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
         turnOnSegLights();
     }
 
@@ -155,39 +177,39 @@ public class FMSStation {
      * Vlak přijede na 1. kolej zprava ze segmentu 2
      */
     public void doV1KPS2() {
-        variables[1] = true;
+        variables[1] = true; // Seg2
 
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = true;
-        variables[12] = false;
-        variables[11] = true;
+        variables[10] = false; // V1
+        variables[13] = false; // V4
+        variables[14] = true; // V5
+        variables[12] = false; // V3
+        variables[11] = true; // V2
     }
 
     /**
      * Vlak přijede na 1. kolej zprava ze segmentu 3
      */
     public void doV1KPS3() {
-        variables[2] = true;
+        variables[2] = true; // Seg3
 
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = true;
-        variables[12] = true;
-        variables[11] = false;
+        variables[10] = false; // V1
+        variables[13] = false; // V4
+        variables[14] = true; // V5
+        variables[12] = true; // V3
+        variables[11] = false; // V2
     }
 
     /**
      * Vlak přijede na 1. kolej zprava ze segmentu 2 a nádraží je plné
      */
     public void doV1KPS2P() {
-        variables[1] = true;
+        variables[1] = true; // Seg2
 
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = true;
-        variables[12] = false;
-        variables[11] = true;
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
+        variables[12] = false; // V3
+        variables[11] = true; // V2
         turnOffSegLights();
     }
 
@@ -195,13 +217,13 @@ public class FMSStation {
      * Vlak přijede na 1. kolej zprava ze segmentu 3 a nádraží je plné
      */
     public void doV1KPS3P() {
-        variables[2] = true;
+        variables[2] = true; // Seg3
 
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = true;
-        variables[12] = true;
-        variables[11] = false;
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
+        variables[12] = true; // V3
+        variables[11] = false; // V2
         turnOffSegLights();
     }
 
@@ -209,22 +231,23 @@ public class FMSStation {
      * Vlak, který přijel na 1.kolej zprava chce odjet z nádraží
      */
     public void doCH1KP() {
-        variables[10] = variables[0];
-        variables[8] = variables[0];
-        variables[0] = false;
-        variables[9] = false;
-        variables[3] = false;
+        variables[10] = variables[0]; // V1
+        variables[8] = variables[0]; // S6
+        variables[0] = false; // Seg1
+        // variables[9] = false; // S7
+        variables[9] = !variables[8]; // S7
+        variables[3] = false; // S1
     }
 
     /**
      * Vlak odjel z 1. koleje doleva
      */
     public void doO1KP() {
-        variables[0] = true;
-        variables[8] = false;
-        variables[10] = true;
-        variables[13] = true;
-        variables[14] = false;
+        variables[0] = true; // Seg1
+        variables[8] = false; // S6
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
         turnOnSegLights();
     }
 
@@ -234,10 +257,10 @@ public class FMSStation {
      * Vlak přijel na 2. kolej zprava ze segmentu 2
      */
     public void doV2KPS2() {
-        variables[1] = true;
-        variables[13] = true;
-        variables[14] = false;
-        variables[10] = true;
+        variables[1] = true; // Seg2
+        variables[13] = true; // V4
+        variables[14] = false; // V5
+        variables[10] = true; // V1
         turnOffSegLights();
     }
 
@@ -245,10 +268,10 @@ public class FMSStation {
      * Vlak přijel na 2. kolej zprava ze segmentu 3
      */
     public void doV2KPS3() {
-        variables[2] = true;
-        variables[13] = true;
-        variables[14] = false;
-        variables[10] = true;
+        variables[2] = true; // Seg3
+        variables[13] = true; // V4
+        variables[14] = false; // V5
+        variables[10] = true; // V1
         turnOffSegLights();
     }
 
@@ -256,22 +279,23 @@ public class FMSStation {
      * Vlak chce odjet z 2. koleje doleva
      */
     public void doCH2KP() {
-        variables[10] = !(variables[0]);
-        variables[9] = variables[0];
-        variables[0] = false;
-        variables[8] = false;
-        variables[3] = false;
+        variables[10] = !(variables[0]); // V1
+        variables[9] = variables[0]; // S7
+        variables[0] = false; // Seg1
+        // variables[8] = false; // S6
+        variables[8] = !variables[9];
+        variables[3] = false; // S1
     }
 
     /**
      * Vlak odjel z 2. koleje doleva
      */
     public void doO2KP() {
-        variables[0] = true;
-        variables[9] = false;
-        variables[10] = false;
-        variables[13] = false;
-        variables[14] = true;
+        variables[0] = true; // Seg1
+        variables[9] = false; // S7
+        variables[10] = false; // V1
+        variables[13] = false; // V4
+        variables[14] = true; // V5
         turnOnSegLights();
     }
 
@@ -279,11 +303,11 @@ public class FMSStation {
      * Vlak odjel z 2. koleje doleva a nádraží je prázdné
      */
     public void doO2KPP() {
-        variables[0] = true;
-        variables[8] = true;
-        variables[10] = true;
-        variables[13] = true;
-        variables[14] = false;
+        variables[0] = true; // Seg1
+        variables[8] = false; // S6
+        variables[10] = true; // V1
+        variables[13] = true; // V4
+        variables[14] = false; // V5
         turnOnSegLights();
     }
 

@@ -331,7 +331,7 @@ public class MainFrame extends JPanel {
             case PK_ZL:
 
                 // CH1KL, pokud je jeden volný segment a zároveň je červená
-                BUTTONS[5].setEnabled((vars[1] || vars[2]) && !vars[4] && !odjizdi());
+                BUTTONS[5].setEnabled(!odjizdi());
 
                 // V2KPS2-3 - volno
                 BUTTONS[17].setEnabled(!vars[1] && !odjizdi());
@@ -345,7 +345,7 @@ public class MainFrame extends JPanel {
                 break;
             case PK_ZP:
                 // CH1KP, pokud je volný první segment a zároveň je červená
-                BUTTONS[15].setEnabled(vars[0] && !vars[8] && !odjizdi());
+                BUTTONS[15].setEnabled(!odjizdi());
 
                 // V2KPS2-3
                 BUTTONS[17].setEnabled(!vars[1] && !odjizdi());
@@ -363,10 +363,10 @@ public class MainFrame extends JPanel {
                 BUTTONS[1].setEnabled(vars[1] && vars[2]);
                 BUTTONS[2].setEnabled(vars[2] && vars[1]);
                 // CH1KL, pokud je jeden volný segment a zároveň je červená na S2
-                BUTTONS[5].setEnabled((vars[1] || vars[2]) && !vars[4] && !odjizdi());
+                BUTTONS[5].setEnabled(!odjizdi());
 
                 // CH2KL, pokud je jeden volný segment a zároveň je červená na S3
-                BUTTONS[8].setEnabled((vars[1] || vars[2]) && !vars[5] && !odjizdi());
+                BUTTONS[8].setEnabled(!odjizdi());
 
                 // O1KL - musí být zelená
                 BUTTONS[6].setEnabled(vars[4]);
@@ -376,7 +376,7 @@ public class MainFrame extends JPanel {
                 break;
             case DK_ZL:
                 // CH2KL, pokud je jeden volný segment a zároveň je červená na S3
-                BUTTONS[8].setEnabled((vars[1] || vars[2]) && !vars[5] && !odjizdi());
+                BUTTONS[8].setEnabled(!odjizdi());
 
                 // V1KLP - enabled, pokud je ve seg1 vlak
                 BUTTONS[4].setEnabled(!vars[0] && !odjizdi());
@@ -385,6 +385,7 @@ public class MainFrame extends JPanel {
                 BUTTONS[13].setEnabled(!vars[1] && !odjizdi());
                 BUTTONS[14].setEnabled(!vars[2] && !odjizdi());
 
+                // odjíždí
                 BUTTONS[10].setEnabled(vars[5]);
 
                 break;
@@ -393,14 +394,14 @@ public class MainFrame extends JPanel {
 
                 // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
                 BUTTONS[0].setEnabled((vars[1] || vars[2]) && vars[0]);
-                BUTTONS[1].setEnabled(vars[0] || vars[2] && vars[1]);
-                BUTTONS[2].setEnabled(vars[0] || vars[1] && vars[2]);
+                BUTTONS[1].setEnabled((vars[0] || vars[2]) && vars[1]);
+                BUTTONS[2].setEnabled((vars[0] || vars[1]) && vars[2]);
 
                 // CH1KP - musí být volný seg1
-                BUTTONS[15].setEnabled(vars[0] && !odjizdi());
+                BUTTONS[15].setEnabled(!odjizdi());
 
                 // CH2KL - musí být volný seg2 nebo 3
-                BUTTONS[8].setEnabled((vars[1] || vars[2]) && !odjizdi());
+                BUTTONS[8].setEnabled(!odjizdi());
 
                 // O1KP - je tam zelená na S6
                 BUTTONS[16].setEnabled(vars[8]);
@@ -413,14 +414,14 @@ public class MainFrame extends JPanel {
 
                 // !!!! MUSÍME NECHAT UVOLNĚNÝ SEGMENT !!!!
                 BUTTONS[0].setEnabled((vars[1] || vars[2]) && vars[0]);
-                BUTTONS[1].setEnabled(vars[0] || vars[2] && vars[1]);
-                BUTTONS[2].setEnabled(vars[0] || vars[1] && vars[2]);
+                BUTTONS[1].setEnabled((vars[0] || vars[2]) && vars[1]);
+                BUTTONS[2].setEnabled((vars[0] || vars[1]) && vars[2]);
 
                 // CH1KL - musí být volný seg2 nebo 3
-                BUTTONS[5].setEnabled((vars[1] || vars[2]) && !odjizdi());
+                BUTTONS[5].setEnabled(!odjizdi());
 
                 // CH2KP - musí být volný seg1
-                BUTTONS[19].setEnabled(vars[0] && !odjizdi());
+                BUTTONS[19].setEnabled(!odjizdi());
 
                 // O1KL
                 BUTTONS[6].setEnabled(vars[4]);
@@ -432,7 +433,7 @@ public class MainFrame extends JPanel {
                 // 19 CH2KP, 13 V1KPS2P, 14 V1KPS3P, 21 O2KPP, 4 V1KLP
 
                 // CH2KP - musí být volný seg1
-                BUTTONS[19].setEnabled(vars[0] && !odjizdi());
+                BUTTONS[19].setEnabled(!odjizdi());
 
                 // V1KPS2P - musí být vlak v seg2
                 BUTTONS[13].setEnabled(!vars[1] && !odjizdi());
@@ -453,10 +454,10 @@ public class MainFrame extends JPanel {
                 BUTTONS[0].setEnabled(false);
 
                 // CH1KP - musí být volný seg1
-                BUTTONS[15].setEnabled(vars[0] && !odjizdi());
+                BUTTONS[15].setEnabled(!odjizdi());
 
                 // CH2KP - musí být volný seg1
-                BUTTONS[19].setEnabled(vars[0] && !odjizdi());
+                BUTTONS[19].setEnabled(!odjizdi());
 
                 // O1KP - S6 zelená
                 BUTTONS[16].setEnabled(vars[8]);

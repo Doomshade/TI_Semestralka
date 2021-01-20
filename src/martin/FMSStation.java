@@ -306,7 +306,7 @@ public class FMSStation {
      */
     public void doO2KPP() {
         variables[0] = true; // Seg1
-        variables[8] = false; // S6
+        variables[9] = false; // S7
         variables[10] = true; // V1
         variables[13] = true; // V4
         variables[14] = false; // V5

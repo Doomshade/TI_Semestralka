@@ -11,8 +11,14 @@ import java.util.Arrays;
 
 public class MainFrame extends JPanel {
 
+    /**
+     * Šířka a výška image
+     */
     private static final int W = 1222, H = 342;
 
+    /**
+     * Počet images
+     */
     private static final int IMAGE_COUNT = 35;
 
     /*
@@ -23,18 +29,43 @@ public class MainFrame extends JPanel {
     V2KPS2, V2KPS3, CH2KP, O2KP, O2KPP
     */
 
+    /**
+     * Tlačítka
+     */
     private final JButton[] BUTTONS = new JButton[(int) Arrays.stream(FMSSignals.values()).count()];
 
+    /**
+     * Načtené image
+     */
     private static final BufferedImage[] IMGS = new BufferedImage[IMAGE_COUNT];
+
+    /**
+     * Použité image
+     */
     private final boolean[] USED_IMGS = new boolean[IMAGE_COUNT];
 
-    private static final String[] NAMES = {
+    /**
+     * Tooltipy pro tlačítka
+     */
+    private static final String[] TOOLTIPS = {
             "Vjezd vlaku do segmentu 1", "Vjezd vlaku do segmentu 2", "Vjezd vlaku do segmentu 3",
-            "Vjezd vlaku ze segmentu 1 na 1. kolej", "Vjezd vlaku ze segmentu 1 na 1. kolej",
-            "Vlak zleva na koleji 1 chce odjet"
+            "Vjezd vlaku zleva na 1. kolej", "Vjezd vlaku zleva na 1. kolej",
+            "Vlak zleva na 1. koleji chce odjet", "Vlak zleva na 1. koleji odjíždí", "Vjezd vlaku zleva na 2. kolej",
+            "Vlak zleva na 2. koleji chce odjet", "Vlak zleva na 2. koleji odjíždí", "Vlak zleva na 2. koleji odjíždí",
+            "Vjezd vlaku z 2. segmentu na 1. kolej", "Vjezd vlaku z 3. segmentu na 1. kolej", "Vjezd vlaku z 2. segmentu na 1. kolej", "Vjezd vlaku z 3. segmentu na 1. kolej",
+            "Vlak zprava na 1. koleji chce odjet", "Vlak zprava na 1. koleji odjíždí",
+            "Vjezd vlaku z 2. segmentu na 2. kolej", "Vjezd vlaku z 3. segmentu na 2. kolej",
+            "Vlak zprava na 2. koleji chce odjet", "Vlak zprava na 2. koleji odjíždí", "Vlak zprava na 2. koleji odjíždí"
     };
 
+    /**
+     * Automat
+     */
     private FMSController controller;
+
+    /**
+     * Draw panel
+     */
     private JPanel koleje;
 
     public void showScreen() throws IOException {
@@ -63,12 +94,13 @@ public class MainFrame extends JPanel {
 
         for (int i = 0; i < FMSSignals.values().length; i++) {
             String s;
-            if (i >= NAMES.length) {
+            if (i >= TOOLTIPS.length) {
                 s = FMSSignals.values()[i].toString();
             } else {
-                s = NAMES[i];
+                s = TOOLTIPS[i];
             }
             BUTTONS[i] = createButton(i + ": " + FMSSignals.values()[i].toString(), FMSSignals.values()[i]);
+            BUTTONS[i].setToolTipText(s);
             p.add(BUTTONS[i]);
         }
         JButton reset = new JButton("RESET");

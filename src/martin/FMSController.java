@@ -184,9 +184,11 @@ public class FMSController {
             case O2KLP:
                 station.doO2KLP();
                 station.currentState = FMSStates.EMPTY;
+                break;
             case V1KPS2P:
                 station.doV1KPS2P();
                 station.currentState = FMSStates.PK_ZP_DK_ZL;
+                break;
             case V1KPS3P:
                 station.doV1KPS3P();
                 station.currentState = FMSStates.PK_ZP_DK_ZL;

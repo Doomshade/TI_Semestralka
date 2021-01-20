@@ -1,5 +1,7 @@
 package martin;
 
+import java.io.Console;
+
 public class FMSController {
 
     public FMSStation station = new FMSStation();
@@ -11,6 +13,8 @@ public class FMSController {
      * @return true -> pokud byl zadán validní signál, jinak false
      */
     public boolean switchState(FMSSignals signal) {
+
+        System.out.println("Odeslaný signál: " + signal.toString());
 
         switch (station.currentState) {
             case EMPTY:
@@ -186,6 +190,7 @@ public class FMSController {
             case V1KPS3P:
                 station.doV1KPS3P();
                 station.currentState = FMSStates.PK_ZP_DK_ZL;
+                break;
             default:
                 return false;
         }
@@ -222,6 +227,7 @@ public class FMSController {
             case O1KP:
                 station.doO1KP();
                 station.currentState = FMSStates.DK_ZL;
+                break;
             default:
                 return false;
         }
@@ -259,6 +265,7 @@ public class FMSController {
             case O1KL:
                 station.doO1KL();
                 station.currentState = FMSStates.DK_ZP;
+                break;
             default:
                 return false;
         }

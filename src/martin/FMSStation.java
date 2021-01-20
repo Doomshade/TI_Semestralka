@@ -85,8 +85,8 @@ public class FMSStation {
         variables[7] = false; // S5
          */
 
-        variables[6] = !variables[4]; // S4
-        variables[7] = !variables[4]; // S5
+        variables[6] = !variables[4] && variables[3]; // S4
+        variables[7] = !variables[4] && variables[3]; // S5
 
         variables[1] = false; // Seg2
         variables[2] = variables[2] && variables[11]; // Seg3
@@ -135,8 +135,10 @@ public class FMSStation {
         variables[7] = false; // S5
          */
 
-        variables[6] = !variables[5]; // S4 -- ZMĚNA
-        variables[7] = !variables[5]; // S5
+        variables[6] = !variables[5] && variables[3];
+        ; // S4 -- ZMĚNA
+        variables[7] = !variables[5] && variables[3];
+        ; // S5
 
         variables[2] = false; // Seg3
         variables[1] = variables[1] && variables[12]; // Seg2
@@ -235,8 +237,8 @@ public class FMSStation {
         variables[8] = variables[0]; // S6
         variables[0] = false; // Seg1
         // variables[9] = false; // S7
-        variables[9] = !variables[8]; // S7
-        variables[3] = false; // S1
+        variables[9] = false; // S7
+        variables[3] = !variables[8] && variables[6]; // S1
     }
 
     /**
@@ -283,8 +285,8 @@ public class FMSStation {
         variables[9] = variables[0]; // S7
         variables[0] = false; // Seg1
         // variables[8] = false; // S6
-        variables[8] = !variables[9];
-        variables[3] = false; // S1
+        variables[8] = false;
+        variables[3] = !variables[9] && variables[6]; // S1
     }
 
     /**

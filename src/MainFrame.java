@@ -350,7 +350,7 @@ public class MainFrame extends JPanel {
                 BUTTONS[18].setEnabled(!vars[2] && !odjizdi());
 
                 // V2KL
-                BUTTONS[7].setEnabled(!vars[0] && !odjizdi());
+                BUTTONS[7].setEnabled(!vars[0] && !odjizdi() && (vars[1] || vars[2]));
 
                 // O1KL - musí být zelená
                 BUTTONS[6].setEnabled(vars[4]);

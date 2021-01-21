@@ -1,7 +1,3 @@
-package martin;
-
-import java.io.Console;
-
 public class FMSController {
 
     public FMSStation station = new FMSStation();

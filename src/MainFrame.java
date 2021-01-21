@@ -1,6 +1,3 @@
-import martin.FMSController;
-import martin.FMSSignals;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;

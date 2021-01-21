@@ -1,5 +1,3 @@
-package martin;
-
 /**
  * Stavy automatu
  */

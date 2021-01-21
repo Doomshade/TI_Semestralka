@@ -1,5 +1,3 @@
-package martin;
-
 /**
  * Množina všech možných vstupních signálů
  */

@@ -1,5 +1,3 @@
-package martin;
-
 public class FMSStation {
 
     final int VAR_COUNT = 15;

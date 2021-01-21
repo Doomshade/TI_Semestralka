@@ -2,8 +2,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 
 public class MainFrame extends JPanel {
@@ -78,8 +78,8 @@ public class MainFrame extends JPanel {
         };
 
         for (int i = 0; i < fileNames.length; ++i) {
-            URL url = getClass().getResource("img/" + fileNames[i] + ".png");
-            IMGS[i] = ImageIO.read(url);
+            /*URL url = getClass().getResource("img/" + fileNames[i] + ".png");*/
+            IMGS[i] = ImageIO.read(new File("res/img/" + fileNames[i] + ".png"));
         }
 
         JFrame frame = new JFrame("Semestrální práce TI - Jakubašek a Šmrha");
@@ -112,7 +112,7 @@ public class MainFrame extends JPanel {
             ta.setEditable(false);
 
             for (int i = 0; i < BUTTONS.length; ++i) {
-                ta.append(FMSSignals.values()[i].toString() +  "\t" + TOOLTIPS[i] + "\n");
+                ta.append(FMSSignals.values()[i].toString() + "\t" + TOOLTIPS[i] + "\n");
             }
             lFrame.add(ta);
             lFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
